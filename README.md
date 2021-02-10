@@ -1,4 +1,4 @@
-Potion<img width="12%" align="right" src="https://github.com/caltechlibrary/potion/raw/main/.graphics/potion-icon.png">
+Potion<img width="5%" align="right" src="https://github.com/caltechlibrary/potion/raw/main/.graphics/potion-icon.png">
 ======
 
 Potion (_"**P**ython **o**bjects for **TI**ND **o**peratio**n**s"_) is a Python package for getting basic data from a TIND.io server.
