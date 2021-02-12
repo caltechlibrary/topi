@@ -35,6 +35,7 @@ __license__     = 'BSD 3-clause'
 from .record import Record
 from .tind import Tind
 
+__all__ = ['Tind', 'Record']
 
 
 # Miscellaneous utilities.
