@@ -17,21 +17,33 @@ file "LICENSE" for more information.
 class Record():
     '''Object class for representing a record from TIND.'''
 
-    def __init__(self):
-        self.tind_id     = ''
-        self.tind_server = ''
-        self.barcode     = ''
-        self.title       = ''
-        self.author      = ''
-        self.year        = ''
-        self.edition     = ''
-        self.imprint     = ''
-        self.language    = ''
-        self.description = ''
-        self.note        = ''
-        self.call_no     = ''
-        self.thumbnail   = ''
-        self.isbn_list = []
+    # The reason for an explicit list of fields here is so that we can use it
+    # in the definition of __repr__().
+    __fields = {
+        'tind_id'     : str,
+        'tind_server' : str,
+        'barcode'     : str,
+        'title'       : str,
+        'author'      : str,
+        'year'        : str,
+        'edition'     : str,
+        'imprint'     : str,
+        'language'    : str,
+        'description' : str,
+        'note'        : str,
+        'call_no'     : str,
+        'thumbnail'   : str,
+        'isbn_list'   : list
+    }
+
+
+    def __init__(self, **kwargs):
+        # Always first initialize every field.
+        for field, field_type in self.__fields.items():
+            setattr(self, field, ([] if field_type == list else ''))
+        # Set values if given arguments.
+        for field, value in kwargs.items():
+            setattr(self, field, value)
 
 
     def __str__(self):
@@ -41,7 +53,18 @@ class Record():
 
 
     def __repr__(self):
-        return f'<Record {self.tind_id}>'
+        field_values = []
+        for field in self.__fields.keys():
+            value = getattr(self, field, None)
+            if value:
+                if isinstance(value, list):
+                    field_values.append(f'{field}={value}')
+                else:
+                    field_values.append(f'{field}="{value}"')
+        if field_values:
+            return 'Record(' + ', '.join(field_values) + ')'
+        else:
+            return 'Record()'
 
 
     def __eq__(self, other):
