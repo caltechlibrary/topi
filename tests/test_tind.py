@@ -230,4 +230,12 @@ def test_representation():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(barcode = 35047019626837)
     assert str(r) == 'Record 990468 at https://caltech.tind.io'
-    assert repr(r) == '<Record 990468>'
+    assert repr(r) == ('Record(tind_id="990468", '
+                       'tind_server="https://caltech.tind.io", '
+                       'barcode="35047019626837", '
+                       'title="Fundamentals of geophysics", '
+                       'author="William Lowrie, Andreas Fichtner", '
+                       'year="2020", edition="Third edition", '
+                       'call_no="QC806.L67 2020", '
+                       'isbn_list=[\'9781108492737\', \'1108492738\', '
+                       '\'9781108716970\', \'1108716970\', \'9781108685917\'])')
