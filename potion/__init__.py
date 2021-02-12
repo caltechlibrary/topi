@@ -29,6 +29,14 @@ __email__       = 'mhucka@caltech.edu'
 __license__     = 'BSD 3-clause'
 
 
+# Exports.
+# .............................................................................
+
+from .record import Record
+from .tind import Tind
+
+
+
 # Miscellaneous utilities.
 # .............................................................................
 
