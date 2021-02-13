@@ -1,5 +1,5 @@
 '''
-record.py: the Record object class for Potion
+item.py: the Item object class for Potion
 
 Authors
 -------
@@ -14,41 +14,38 @@ is open-source software released under a 3-clause BSD license.  Please see the
 file "LICENSE" for more information.
 '''
 
-class Record():
-    '''Object class for representing a record from TIND.'''
+from .record import Record
+
+class Item():
+    '''Object class for representing an item within a record in TIND.'''
 
     # The reason for an explicit list of fields here is so that we can use it
     # in the definition of __repr__().
     __fields = {
-        'tind_id'     : str,            # Tind id == MARC control field 001.
-        'url'         : str,            # Page for the record in TIND.
-        'title'       : str,
-        'subtitle'    : str,
-        'author'      : str,
-        'edition'     : str,
-        'year'        : str,
-        'isbn_issn'   : list,
-        'imprint'     : str,
-        'language'    : str,
+        'parent'      : type(Record),
+        'barcode'     : str,
+        'type'        : str,
+        'volume'      : str,
+        'call_number' : str,
         'description' : str,
-        'note'        : str,
-        'thumbnail'   : str,
-        'items'       : list,
+        'library'     : str,
+        'location'    : str,
+        'status'      : str,
     }
 
 
     def __init__(self, **kwargs):
         # Always first initialize every field.
         for field, field_type in self.__fields.items():
-            setattr(self, field, ([] if field_type == list else ''))
+            setattr(self, field, ('' if field_type == str else None))
         # Set values if given arguments.
         for field, value in kwargs.items():
             setattr(self, field, value)
 
 
     def __str__(self):
-        details = f' {self.url}' if self.url else ''
-        return f'TIND Record{details}'
+        details = f' {self.barcode}' if self.barcode else ''
+        return f'TIND Item{details}'
 
 
     def __repr__(self):
@@ -61,9 +58,9 @@ class Record():
                 else:
                     field_values.append(f'{field}="{value}"')
         if field_values:
-            return 'Record(' + ', '.join(field_values) + ')'
+            return 'Item(' + ', '.join(field_values) + ')'
         else:
-            return 'Record()'
+            return 'Item()'
 
 
     def __eq__(self, other):
@@ -82,22 +79,22 @@ class Record():
 
 
     def __lt__(self, other):
-        return self.tind_id < other.tind_id
+        return self.barcode < other.barcode
 
 
     def __gt__(self, other):
         if isinstance(other, type(self)):
-            return other.tind_id < self.tind_id
+            return other.barcode < self.barcode
         return NotImplemented
 
 
     def __le__(self, other):
         if isinstance(other, type(self)):
-            return not other.tind_id < self.tind_id
+            return not other.barcode < self.barcode
         return NotImplemented
 
 
     def __ge__(self, other):
         if isinstance(other, type(self)):
-            return not self.tind_id < other.tind_id
+            return not self.barcode < other.barcode
         return NotImplemented
