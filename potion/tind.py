@@ -228,6 +228,13 @@ class Tind():
                     value = subfield.text.split()[0]
                     if value.isdigit():
                         record.isbn_issn.append(value)
+            elif element.attrib['tag'] == '300':
+                parts = [sub.text.strip() for sub in element.findall(ELEM_SUBFIELD)]
+                record.description = ' '.join(parts)
+            elif element.attrib['tag'] == '504':
+                for subfield in element.findall(ELEM_SUBFIELD):
+                    if subfield.attrib['code'] == 'a':
+                        record.note = subfield.text.strip()
 
         # We get author from 245 because in our entries, it's frequently part
         # of the title statement. If it's not, but we got an author from 100
@@ -248,11 +255,12 @@ class Tind():
             return record
 
         # Some cleanup work is better left until after we obtain all values.
-        record.author   = cleaned(record.author)
-        record.title    = cleaned(record.title)
-        record.edition  = cleaned(record.edition)
-        record.subtitle = cleaned(record.subtitle)
-        record.url      = f'{self.server_url}/record/{record.tind_id}'
+        record.author      = cleaned(record.author)
+        record.title       = cleaned(record.title)
+        record.edition     = cleaned(record.edition)
+        record.subtitle    = cleaned(record.subtitle)
+        record.description = cleaned(record.description)
+        record.url         = f'{self.server_url}/record/{record.tind_id}'
 
         return record
 
