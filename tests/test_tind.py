@@ -231,6 +231,46 @@ def test_tind_id4():
     assert r.edition == 'Bantam trade pbk. reissue'
 
 
+def test_tind_id5():
+    tind = Tind('https://caltech.tind.io')
+    r = tind.record(tind_id = 705063)
+    assert r.tind_id    == '705063'
+    assert r.url        == 'https://caltech.tind.io/record/705063'
+    assert r.title      == 'Python essential reference'
+    assert r.author     == 'David M. Beazley'
+    assert r.edition    == '4th ed'
+    assert r.year       == '2009'
+    assert r.isbn_issn  == ['0672329786', '9780672329784']
+    assert len(r.items) == 1
+    assert r.items[0].parent      == r
+    assert r.items[0].barcode     == '35047018886929'
+    assert r.items[0].type        == 'Book'
+    assert r.items[0].call_number == 'QA76.73.P98 B43 2009'
+
+
+def test_tind_id6():
+    tind = Tind('https://caltech.tind.io')
+    r = tind.record(tind_id = 574858)
+    assert r.tind_id    == '574858'
+    assert r.url        == 'https://caltech.tind.io/record/574858'
+    assert r.title      == 'Feedback control theory'
+    assert r.author     == 'John C. Doyle, Bruce A. Francis, Allen R. Tannenbaum'
+    assert r.year       == '1992'
+    assert r.isbn_issn  == ['0023300116']
+    assert len(r.items) == 2
+    assert r.items[0].parent      == r
+    assert r.items[0].barcode     == '35047011140233'
+    assert r.items[0].type        == 'Book'
+    assert r.items[0].call_number == 'TJ216 .D69 1992'
+    assert r.items[0].description == 'c.1'
+    assert r.items[0].library     == 'Sherman Fairchild Library'
+    assert r.items[0].location    == 'SFL 2 books'
+    assert r.items[1].parent      == r
+    assert r.items[1].barcode     == '35047019061456'
+    assert r.items[1].type        == 'Book'
+    assert r.items[1].call_number == 'TJ216 .D69 1992'
+
+
 def test_repr1():
     tind = Tind('https://caltech.tind.io')
     r = tind.item(barcode = 35047019626837)
