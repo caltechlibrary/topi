@@ -294,10 +294,9 @@ def test_repr2():
                        'title="The diamond age", author="Neal Stephenson", '
                        'edition="Bantam trade pbk. reissue", year="2003", '
                        'isbn_issn=[\'0553380966\'], description="499 p. ; 21 cm", '
-                       'items=[Item(parent="TIND Record '
-                       'https://caltech.tind.io/record/676897", '
-                       'barcode="35047018297788", '
-                       'type="Book", call_number="PS3569.T3868 D53 2003", '
+                       'thumbnail="https://bookcover.tind.io//bookcover/thumbnails/0553380966_large", '
+                       'items=[Item(parent="TIND Record https://caltech.tind.io/record/676897", '
+                       'barcode="35047018297788", type="Book", '
+                       'call_number="PS3569.T3868 D53 2003", '
                        'description="c.1", library="Millikan Library", '
-                       'location="Millikan 9 leisure collection", '
-                       'status="on shelf")])')
+                       'location="Millikan 9 leisure collection", status="on shelf")])')
