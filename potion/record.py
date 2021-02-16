@@ -22,16 +22,14 @@ class Record():
     __fields = {
         'tind_id'     : str,            # Tind id == MARC control field 001.
         'url'         : str,            # Page for the record in TIND.
-        'title'       : str,
-        'subtitle'    : str,
-        'author'      : str,
-        'edition'     : str,
-        'year'        : str,
-        'isbn_issn'   : list,
-        'imprint'     : str,
-        'language'    : str,
-        'description' : str,
-        'note'        : str,
+        'title'       : str,            # MARC data field 245
+        'subtitle'    : str,            # MARC data field 245
+        'author'      : str,            # MARC data field 245 or 100
+        'edition'     : str,            # MARC data field 250
+        'year'        : str,            # extracted from control field 008
+        'isbn_issn'   : list,           # MARC data field 020
+        'description' : str,            # MARC data field 300 concatenated
+        'bib_note'    : str,            # MARC data field 504a
         'thumbnail'   : str,
         'items'       : list,
     }
