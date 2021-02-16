@@ -28,10 +28,14 @@ class PotionException(Exception):
 # Exception classes.
 # .............................................................................
 
-class ServerError(PotionException):
+class TindError(PotionException):
     '''Unrecoverable problem involving interactions with the TIND server.'''
     pass
 
 class PotionError(PotionException):
     '''Unrecoverable problem involving Potion.'''
+    pass
+
+class NotFound(PotionException):
+    '''A requested item was not found in the TIND server.'''
     pass
