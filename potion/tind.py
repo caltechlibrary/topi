@@ -26,7 +26,7 @@ from   commonpy.network_utils import net
 from   commonpy.exceptions import NoContent, ServiceFailure, RateLimitExceeded
 import json
 from   json import JSONDecodeError
-from   lxml import etree, html
+from   lxml import etree
 
 if __debug__:
     from sidetrack import log
@@ -52,10 +52,15 @@ ELEM_SUBFIELD     = '{http://www.loc.gov/MARC21/slim}subfield'
 _XML_USING_BARCODE = '{}/search?p=barcode%3A+{}&of=xm'
 _XML_USING_TIND_ID = '{}/search?recid={}&of=xm'
 
-# URL templates for item data from a TIND server.
+# URL template for item data from a TIND server.
 # The first placeholder is for the host URL; the second is for a TIND record id.
 # Use Python .format() to substitute the relevant values into the string.
 _JSON_USING_TIND_ID = '{}/nanna/bibcirc/{}/details'
+
+# URL template for thumbnail images. The result is returned as JSON.
+# The first placeholder is for the host URL; the second is for a TIND record id.
+# Use Python .format() to substitute the relevant values into the string.
+_THUMBNAIL_FOR_TIND_ID = '{}/nanna/thumbnail/{}'
 
 # Time in seconds we pause if we hit the rate limit, and number of times we
 # repeatedly wait before we give up entirely.
@@ -114,7 +119,6 @@ class Tind():
             record.items = self._items_for_tind_id(tind_id or record.tind_id)
             for item in record.items:
                 item.parent = record
-            record.thumbnail = self._thumbnail_for_tind_id(record.tind_id)
             return record
         else:
             arg = tind_id if tind_id else 'given XML data'
@@ -157,7 +161,9 @@ class Tind():
         (resp, error) = net('get', search_template.format(self.server_url, id))
         if not error:
             if __debug__: log(f'got result from {self.server_url} for {id}')
-            return self._record_from_xml(resp.content)
+            record = self._record_from_xml(resp.content)
+            record.thumbnail = self._thumbnail_for_tind_id(record.tind_id)
+            return record
         elif isinstance(error, NoContent):
             if __debug__: log(f'got empty xml content for {id}')
             return Record()
@@ -185,7 +191,8 @@ class Tind():
         # Parse the XML.
         if __debug__: log(f'parsing MARC XML {len(xml)} chars long')
         try:
-            tree = etree.fromstring(xml, parser = etree.XMLParser(recover = True))
+            parser = etree.XMLParser(recover = True)
+            tree = etree.fromstring(xml, parser = parser)
         except Exception as ex:
             raise ValueError(f'Bad XML')
         if len(tree) == 0:             # Blank record.
@@ -260,7 +267,7 @@ class Tind():
         record.edition     = cleaned(record.edition)
         record.subtitle    = cleaned(record.subtitle)
         record.description = cleaned(record.description)
-        record.url         = f'{self.server_url}/record/{record.tind_id}'
+        record.url         = self._url_for_tind_record(record.tind_id)
 
         return record
 
@@ -307,10 +314,43 @@ class Tind():
             raise TindError(f'Problem contacting {self.server_url}: {str(error)}')
 
 
+    def _thumbnail_for_tind_id(self, id):
+        (resp, error) = net('get', _THUMBNAIL_FOR_TIND_ID.format(self.server_url, id))
+        if not error:
+            if __debug__: log(f'got thumbnail data for {id}')
+            try:
+                data = json.loads(resp.text)
+            except JSONDecodeError as ex:
+                raise TindError(f'Malformed result from {self.server_url}: str(ex)')
+            except TypeError as ex:
+                raise PotionError('Error getting thumbnail -- please report this.')
+            if data:
+                if 'big' in data:
+                    if __debug__: log(f'thumbnail for {id} is {data["big"]}')
+                    return data['big']
+                elif 'small' in data:
+                    if __debug__: log(f'thumbnail for {id} is {data["small"]}')
+                    return data['small']
+            if __debug__: log(f'could not find thumbnail for {id}')
+            return ''
+        elif isinstance(error, NoContent):
+            if __debug__: log(f'got empty json content for thumbnail for {id}')
+            return Record()
+        elif isinstance(error, RateLimitExceeded):
+            retry += 1
+            if retry > _MAX_SLEEP_CYCLES:
+                raise TindError(f'Rate limit exceeded for {self.server_url}')
+            else:
+                if __debug__: log(f'hit rate limit; pausing {_RATE_LIMIT_SLEEP}s')
+                wait(_RATE_LIMIT_SLEEP)
+                return self._record_from_server(search_template, id, retry = retry)
+        else:
+            if __debug__: log(f'got {type(error)} error for {id}')
+            raise TindError(f'Problem contacting {self.server_url}: {str(error)}')
 
-    def _thumbnail_for_tind_id(self, tind_id):
-        pass
 
+    def _url_for_tind_record(self, tind_id):
+        return f'{self.server_url}/record/{tind_id}'
 
 
 # Miscellaneous helpers.
