@@ -32,10 +32,12 @@ __license__     = 'BSD 3-clause'
 # Exports.
 # .............................................................................
 
-from .record import Record
-from .tind import Tind
+from .exceptions import TindError, PotionError, NotFound
+from .item       import Item
+from .record     import Record
+from .tind       import Tind
 
-__all__ = ['Tind', 'Record']
+__all__ = ['Tind', 'Record', 'Item', 'TindError', 'PotionError', 'NotFound']
 
 
 # Miscellaneous utilities.
