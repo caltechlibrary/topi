@@ -200,6 +200,7 @@ class Tind():
                 record.year = element.text[7:11].strip()
                 if not record.year.isdigit():
                     record.year = ''
+
         for element in elements.findall(ELEM_DATAFIELD):
             if element.attrib['tag'] == '250':
                 record.edition = element.find(ELEM_SUBFIELD).text.strip()
@@ -218,7 +219,7 @@ class Tind():
                         # The title sometimes contains the author names too.
                         record.title, record.author = parsed_title_and_author(text)
                     elif subfield.attrib['code'] == 'b':
-                        subtitle = subfield.text.strip()
+                        record.subtitle = subfield.text.strip()
                     elif subfield.attrib['code'] == 'c':
                         record.author = subfield.text.strip()
             elif element.attrib['tag'] == '020':
@@ -247,16 +248,12 @@ class Tind():
             return record
 
         # Some cleanup work is better left until after we obtain all values.
-        record.author  = cleaned(record.author)
-        record.title   = cleaned(record.title)
-        record.edition = cleaned(record.edition)
-        if subtitle:
-            # A separate subtitle is not useful for us, so merge it into title.
-            if subtitle.find('/') > 0:
-                subtitle = subtitle[:-1].strip()
-            record.title += ': ' + subtitle
+        record.author   = cleaned(record.author)
+        record.title    = cleaned(record.title)
+        record.edition  = cleaned(record.edition)
+        record.subtitle = cleaned(record.subtitle)
+        record.url      = f'{self.server_url}/record/{record.tind_id}'
 
-        record.url = f'{self.server_url}/record/{record.tind_id}'
         return record
 
 
@@ -315,8 +312,7 @@ def cleaned(text):
     '''Mildly clean up the given text string.'''
     if not text:
         return text
-    if text and text.endswith('.'):
-        text = text[:-1]
+    text = text.rstrip('./')
     return text.strip()
 
 

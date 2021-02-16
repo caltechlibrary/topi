@@ -172,11 +172,12 @@ def test_barcode2():
     item = tind.item(barcode = 350470000611207)
     assert item.barcode == '350470000611207'
     assert item.call_number == 'PR6013.R416 Z465'
-    assert item.parent.tind_id == '466498'
-    assert item.parent.title   == 'Pack my bag: a self-portrait'
-    assert item.parent.author  == 'Henry Green'
-    assert item.parent.edition == ''
-    assert item.parent.year    == '1940'
+    assert item.parent.tind_id  == '466498'
+    assert item.parent.title    == 'Pack my bag'
+    assert item.parent.subtitle == 'a self-portrait'
+    assert item.parent.author   == 'Henry Green'
+    assert item.parent.edition  == ''
+    assert item.parent.year     == '1940'
 
 
 def test_barcode3():
@@ -184,21 +185,23 @@ def test_barcode3():
     item = tind.item(barcode = 35047019626829)
     assert item.barcode == '35047019626829'
     assert item.call_number == 'Q175 .G5427'
-    assert item.parent.tind_id == '990456'
-    assert item.parent.title   == 'GIS for science: applying mapping and spatial analytics'
-    assert item.parent.author  == 'Dawn J. Wright and Christian Harder, editors'
-    assert item.parent.year    == '2019'
-    assert item.parent.edition == ''
+    assert item.parent.tind_id  == '990456'
+    assert item.parent.title    == 'GIS for science'
+    assert item.parent.subtitle == 'applying mapping and spatial analytics'
+    assert item.parent.author   == 'Dawn J. Wright and Christian Harder, editors'
+    assert item.parent.year     == '2019'
+    assert item.parent.edition  == ''
 
 
 def test_tind_id1():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(tind_id = 673541)
-    assert r.tind_id == '673541'
-    assert r.title   == 'Subtitles: on the foreignness of film'
-    assert r.author  == 'Atom Egoyan and Ian Balfour'
-    assert r.year    == '2004'
-    assert r.edition == ''
+    assert r.tind_id  == '673541'
+    assert r.title    == 'Subtitles'
+    assert r.subtitle == 'on the foreignness of film'
+    assert r.author   == 'Atom Egoyan and Ian Balfour'
+    assert r.year     == '2004'
+    assert r.edition  == ''
 
 
 def test_tind_id2():
