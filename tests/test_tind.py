@@ -10,7 +10,7 @@ try:
 except:
     sys.path.append('..')
 
-from potion import Tind, Record
+from potion import Tind, Item, Record
 
 
 MARC_XML = r'''<?xml version="1.0" encoding="UTF-8"?>
@@ -133,109 +133,128 @@ MARC_XML = r'''<?xml version="1.0" encoding="UTF-8"?>
 def test_xml():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(marc_xml = MARC_XML)
-    assert r.barcode == ''
     assert r.tind_id == '735973'
     assert r.title   == 'Vector calculus'
     assert r.author  == 'Jerrold E. Marsden, Anthony Tromba'
     assert r.year    == '2012'
     assert r.edition == '6th ed'
-    assert r.call_no == 'QA303 .M338 2012'
+    assert len(r.items) == 3
+    barcodes = [item.barcode for item in r.items]
+    assert "35047018228114" in barcodes
+    assert "35047019492099" in barcodes
+    assert "35047019292101" in barcodes
+
+
+def test_item1():
+    tind = Tind('https://caltech.tind.io')
+    item = tind.item(barcode = "35047018228114")
+    assert item.barcode == "35047018228114"
+    assert item.type == 'Book'
+    assert item.call_number == 'QA303 .M338 2012'
+    assert item.location == 'SFL basement books'
+    assert item.parent.tind_id == '735973'
 
 
 def test_barcode1():
     tind = Tind('https://caltech.tind.io')
-    r = tind.record(barcode = 35047019626837)
-    assert r.barcode == '35047019626837'
-    assert r.tind_id == '990468'
-    assert r.title   == 'Fundamentals of geophysics'
-    assert r.author  == 'William Lowrie, Andreas Fichtner'
-    assert r.year    == '2020'
-    assert r.edition == 'Third edition'
-    assert r.call_no == 'QC806.L67 2020'
+    item = tind.item(barcode = 35047019626837)
+    assert item.barcode == '35047019626837'
+    assert item.parent.tind_id == '990468'
+    assert item.parent.title   == 'Fundamentals of geophysics'
+    assert item.parent.author  == 'William Lowrie, Andreas Fichtner'
+    assert item.parent.edition == 'Third edition'
+    assert item.parent.year    == '2020'
+    assert item.call_number == 'QC806.L67 2020'
 
 
 def test_barcode2():
     tind = Tind('https://caltech.tind.io')
-    r = tind.record(barcode = 350470000611207)
-    assert r.barcode == '350470000611207'
-    assert r.tind_id == '466498'
-    assert r.title   == 'Pack my bag: a self-portrait'
-    assert r.author  == 'Henry Green'
-    assert r.year    == '1940'
-    assert r.edition == ''
-    assert r.call_no == 'PR6013.R416 Z465'
+    item = tind.item(barcode = 350470000611207)
+    assert item.barcode == '350470000611207'
+    assert item.call_number == 'PR6013.R416 Z465'
+    assert item.parent.tind_id == '466498'
+    assert item.parent.title   == 'Pack my bag: a self-portrait'
+    assert item.parent.author  == 'Henry Green'
+    assert item.parent.edition == ''
+    assert item.parent.year    == '1940'
 
 
 def test_barcode3():
     tind = Tind('https://caltech.tind.io')
-    r = tind.record(barcode = 35047019626829)
-    assert r.barcode == '35047019626829'
-    assert r.tind_id == '990456'
-    assert r.title   == 'GIS for science: applying mapping and spatial analytics'
-    assert r.author  == 'Dawn J. Wright and Christian Harder, editors'
-    assert r.year    == '2019'
-    assert r.edition == ''
-    assert r.call_no == 'Q175 .G5427'
+    item = tind.item(barcode = 35047019626829)
+    assert item.barcode == '35047019626829'
+    assert item.call_number == 'Q175 .G5427'
+    assert item.parent.tind_id == '990456'
+    assert item.parent.title   == 'GIS for science: applying mapping and spatial analytics'
+    assert item.parent.author  == 'Dawn J. Wright and Christian Harder, editors'
+    assert item.parent.year    == '2019'
+    assert item.parent.edition == ''
 
 
 def test_tind_id1():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(tind_id = 673541)
-    assert r.barcode == ''
     assert r.tind_id == '673541'
     assert r.title   == 'Subtitles: on the foreignness of film'
     assert r.author  == 'Atom Egoyan and Ian Balfour'
     assert r.year    == '2004'
     assert r.edition == ''
-    assert r.call_no == 'PN1995.4 .S83 2004'
 
 
 def test_tind_id2():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(tind_id = 670639)
-    assert r.barcode == ''
     assert r.tind_id == '670639'
     assert r.title   == 'French fest'
     assert r.author  == 'played by Mark Laubach'
     assert r.year    == '1997'
     assert r.edition == ''
-    assert r.call_no == ''
 
 
 def test_tind_id3():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(tind_id = 748838)
-    assert r.barcode == ''
     assert r.tind_id == '748838'
     assert r.title   == 'Lasers and electro-optics'
     assert r.author  == 'Christopher C. Davis, University of Maryland'
     assert r.year    == '2014'
     assert r.edition == 'Second edition'
-    assert r.call_no == 'TA1675 .D38 2014'
 
 
 def test_tind_id4():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(tind_id = 676897)
-    assert r.barcode == ''
     assert r.tind_id == '676897'
     assert r.title   == 'The diamond age'
     assert r.author  == 'Neal Stephenson'
     assert r.year    == '2003'
     assert r.edition == 'Bantam trade pbk. reissue'
-    assert r.call_no == 'PS3569.T3868 D53 2003'
 
 
-def test_representation():
+def test_repr1():
     tind = Tind('https://caltech.tind.io')
-    r = tind.record(barcode = 35047019626837)
-    assert str(r) == 'Record 990468 at https://caltech.tind.io'
-    assert repr(r) == ('Record(tind_id="990468", '
-                       'tind_server="https://caltech.tind.io", '
-                       'barcode="35047019626837", '
-                       'title="Fundamentals of geophysics", '
-                       'author="William Lowrie, Andreas Fichtner", '
-                       'year="2020", edition="Third edition", '
-                       'call_no="QC806.L67 2020", '
-                       'isbn_list=[\'9781108492737\', \'1108492738\', '
-                       '\'9781108716970\', \'1108716970\', \'9781108685917\'])')
+    r = tind.item(barcode = 35047019626837)
+    assert str(r) == 'TIND Item 35047019626837'
+    assert repr(r) == ('Item(parent="TIND Record '
+                       'https://caltech.tind.io/record/990468", '
+                       'barcode="35047019626837", type="Book", '
+                       'call_number="QC806.L67 2020", description="c.1", '
+                       'library="Sherman Fairchild Library", '
+                       'location="SFL1 Closed Reserve (24-hr)", status="on shelf")')
+
+def test_repr2():
+    tind = Tind('https://caltech.tind.io')
+    r = tind.record(676897)
+    assert str(r) == 'TIND Record https://caltech.tind.io/record/676897'
+    assert repr(r) == ('Record(tind_id="676897", '
+                       'url="https://caltech.tind.io/record/676897", '
+                       'title="The diamond age", author="Neal Stephenson", '
+                       'edition="Bantam trade pbk. reissue", year="2003", '
+                       'isbn_issn=[\'0553380966\'], '
+                       'items=[Item(parent="TIND Record '
+                       'https://caltech.tind.io/record/676897", '
+                       'barcode="35047018297788", type="Book", '
+                       'call_number="PS3569.T3868 D53 2003", description="c.1", '
+                       'library="Millikan Library", '
+                       'location="Millikan 9 leisure collection", '
+                       'status="on shelf")])')
