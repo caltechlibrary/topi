@@ -20,18 +20,18 @@ class TindRecord():
     # The reason for an explicit list of fields here is so that we can use it
     # in the definition of __repr__().
     __fields = {
-        'tind_id'     : str,            # Tind id == MARC control field 001.
-        'url'         : str,            # Page for the record in TIND.
-        'title'       : str,            # MARC data field 245
-        'subtitle'    : str,            # MARC data field 245
-        'author'      : str,            # MARC data field 245 or 100
-        'edition'     : str,            # MARC data field 250
-        'year'        : str,            # extracted from control field 008
-        'isbn_issn'   : list,           # MARC data field 020
-        'description' : str,            # MARC data field 300 concatenated
-        'bib_note'    : str,            # MARC data field 504a
-        'thumbnail'   : str,
-        'items'       : list,
+        'tind_id'       : str,          # Tind id == MARC control field 001
+        'tind_url'      : str,          # Page for the record in TIND
+        'title'         : str,          # MARC data field 245
+        'subtitle'      : str,          # MARC data field 245
+        'author'        : str,          # MARC data field 245 or 100
+        'edition'       : str,          # MARC data field 250
+        'year'          : str,          # extracted from control field 008
+        'isbn_issn'     : list,         # MARC data field 020
+        'description'   : str,          # MARC data field 300 concatenated
+        'bib_note'      : str,          # MARC data field 504a
+        'thumbnail_url' : str,          # Cover image shown on TIND record page
+        'items'         : list,         # list of TindItem objects
     }
 
 

@@ -75,6 +75,7 @@ class Tind():
     '''Interface to a TIND.io server.'''
 
     def __init__(self, server_url):
+        '''Create an interface to the TIND server at "server_url".'''
         self.server_url = server_url
 
 
@@ -165,7 +166,7 @@ class Tind():
                 if __debug__: log(f'got no response for {endpoint}')
                 return
             record = self._record_from_xml(resp.content)
-            record.thumbnail = self._thumbnail_for_record(record.tind_id)
+            record.thumbnail_url = self._thumbnail_for_record(record.tind_id)
             return record
 
         endpoint = url_template.format(self.server_url, id)
