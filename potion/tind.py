@@ -49,13 +49,13 @@ ELEM_SUBFIELD     = '{http://www.loc.gov/MARC21/slim}subfield'
 # URL templates for retrieving a record from a TIND server.
 # The first placeholder is for the host URL; the second is for an identifier.
 # Use Python .format() to substitute the relevant values into the string.
-_XML_USING_BARCODE = '{}/search?p=barcode%3A+{}&of=xm'
-_XML_USING_TIND_ID = '{}/search?recid={}&of=xm'
+_MARCXML_FOR_BARCODE = '{}/search?p=barcode%3A+{}&of=xm'
+_MARCXML_FOR_TIND_ID = '{}/search?recid={}&of=xm'
 
 # URL template for item data from a TIND server.
 # The first placeholder is for the host URL; the second is for a TIND record id.
 # Use Python .format() to substitute the relevant values into the string.
-_JSON_USING_TIND_ID = '{}/nanna/bibcirc/{}/details'
+_ITEMS_FOR_TIND_ID = '{}/nanna/bibcirc/{}/details'
 
 # URL template for thumbnail images. The result is returned as JSON.
 # The first placeholder is for the host URL; the second is for a TIND record id.
@@ -107,7 +107,7 @@ class Tind():
             tind_id = str(tind_id)
             if not tind_id.isdigit():
                 raise ValueError(f'Invalid argument: {tind_id} is not a number.')
-            record = self._record_from_server(_XML_USING_TIND_ID, tind_id)
+            record = self._record_from_server(_MARCXML_FOR_TIND_ID, tind_id)
         elif marc_xml:
             if not marc_xml.startswith(b'<?xml'):
                 raise ValueError(f'marc_xml argument does not appear to be XML.')
@@ -145,7 +145,7 @@ class Tind():
         barcode = str(barcode)
         if not barcode.isdigit():
             raise ValueError(f'Invalid argument: {barcode} is not a number.')
-        record = self._record_from_server(_XML_USING_BARCODE, barcode)
+        record = self._record_from_server(_MARCXML_FOR_BARCODE, barcode)
         if record:
             record.items = self._items_for_tind_id(record.tind_id)
             for item in record.items:
@@ -158,27 +158,18 @@ class Tind():
             raise NotFound(f'No record found for {barcode} in {self.server_url}')
 
 
-    def _record_from_server(self, search_template, id, retry = 0):
-        (resp, error) = net('get', search_template.format(self.server_url, id))
-        if not error:
-            if __debug__: log(f'got result from {self.server_url} for {id}')
+    def _record_from_server(self, url_template, id):
+        '''Create a TindRecord by contacting "url_template" with the "id".'''
+        def response_handler(resp):
+            if not resp or not resp.content:
+                if __debug__: log(f'got no response for {endpoint}')
+                return
             record = self._record_from_xml(resp.content)
-            record.thumbnail = self._thumbnail_for_tind_id(record.tind_id)
+            record.thumbnail = self._thumbnail_for_record(record.tind_id)
             return record
-        elif isinstance(error, NoContent):
-            if __debug__: log(f'got empty xml content for {id}')
-            return TindRecord()
-        elif isinstance(error, RateLimitExceeded):
-            retry += 1
-            if retry > _MAX_SLEEP_CYCLES:
-                raise TindError(f'Rate limit exceeded for {self.server_url}')
-            else:
-                if __debug__: log(f'hit rate limit; pausing {_RATE_LIMIT_SLEEP}s')
-                wait(_RATE_LIMIT_SLEEP)
-                return self._record_from_server(search_template, id, retry = retry)
-        else:
-            if __debug__: log(f'got {type(error)} error for {id}')
-            raise TindError(f'Problem contacting {self.server_url}: {str(error)}')
+
+        endpoint = url_template.format(self.server_url, id)
+        return result_from_tind(endpoint, response_handler)
 
 
     def _record_from_xml(self, xml):
@@ -273,12 +264,13 @@ class Tind():
         return record
 
 
-    # Fixme: rename that json template
-    def _items_for_tind_id(self, id, retry = 0):
-        (resp, error) = net('get', _JSON_USING_TIND_ID.format(self.server_url, id))
-        results = []
-        if not error:
-            if __debug__: log(f'got result from {self.server_url} for {id}')
+    def _items_for_tind_id(self, id):
+        '''Return a list of TindItem objects for the TIND record "id".'''
+        def response_handler(resp):
+            results = []
+            if not resp or not resp.text:
+                if __debug__: log(f'got empty json for items for {endpoint}')
+                return []
             try:
                 data = json.loads(resp.text)
             except JSONDecodeError as ex:
@@ -287,7 +279,7 @@ class Tind():
                 raise PotionError('Error during item lookup -- please report this.')
 
             if 'items' not in data:
-                if __debug__: log(f'results from server missing "data" key')
+                if __debug__: log(f'results from server missing "items" key')
                 raise TindError(f'Unexpected result from {self.server_url}')
             for item in data['items']:
                 results.append(TindItem(barcode     = item.get('barcode', ''),
@@ -299,26 +291,17 @@ class Tind():
                                         location    = item.get('location', ''),
                                         status      = item.get('status', '')))
             return results
-        elif isinstance(error, NoContent):
-            if __debug__: log(f'got empty json content for {id}')
-            return []
-        elif isinstance(error, RateLimitExceeded):
-            retry += 1
-            if retry > _MAX_SLEEP_CYCLES:
-                raise TindError(f'Rate limit exceeded for {self.server_url}')
-            else:
-                if __debug__: log(f'hit rate limit; pausing {_RATE_LIMIT_SLEEP}s')
-                wait(_RATE_LIMIT_SLEEP)
-                return self._items_for_tind_id(id, retry = retry)
-        else:
-            if __debug__: log(f'got {type(error)} error for {id}')
-            raise TindError(f'Problem contacting {self.server_url}: {str(error)}')
+
+        endpoint = _ITEMS_FOR_TIND_ID.format(self.server_url, id)
+        return result_from_tind(endpoint, response_handler)
 
 
-    def _thumbnail_for_tind_id(self, id, retry = 0):
-        (resp, error) = net('get', _THUMBNAIL_FOR_TIND_ID.format(self.server_url, id))
-        if not error:
-            if __debug__: log(f'got thumbnail data for {id}')
+    def _thumbnail_for_record(self, id, retry = 0):
+        '''Return the URL for the thumbnail in TIND for the record "id".'''
+        def response_handler(resp):
+            if not resp:
+                if __debug__: log(f'got empty json for thumbnail for {id}')
+                return ''
             try:
                 data = json.loads(resp.text)
             except JSONDecodeError as ex:
@@ -332,22 +315,12 @@ class Tind():
                 elif 'small' in data:
                     if __debug__: log(f'thumbnail for {id} is {data["small"]}')
                     return data['small']
-            if __debug__: log(f'could not find thumbnail for {id}')
-            return ''
-        elif isinstance(error, NoContent):
-            if __debug__: log(f'got empty json content for thumbnail for {id}')
-            return ''
-        elif isinstance(error, RateLimitExceeded):
-            retry += 1
-            if retry > _MAX_SLEEP_CYCLES:
-                raise TindError(f'Rate limit exceeded for {self.server_url}')
             else:
-                if __debug__: log(f'hit rate limit; pausing {_RATE_LIMIT_SLEEP}s')
-                wait(_RATE_LIMIT_SLEEP)
-                return self._thumbnail_for_tind_id(id, retry = retry)
-        else:
-            if __debug__: log(f'got {type(error)} error for {id}')
-            raise TindError(f'Problem contacting {self.server_url}: {str(error)}')
+                if __debug__: log(f'could not find thumbnail for {id}')
+                return ''
+
+        endpoint = _THUMBNAIL_FOR_TIND_ID.format(self.server_url, id)
+        return result_from_tind(endpoint, response_handler)
 
 
     def _url_for_tind_record(self, tind_id):
@@ -386,3 +359,25 @@ def parsed_title_and_author(text):
     if title.endswith(':'):
         title = title[:-1].strip()
     return title, author
+
+
+def result_from_tind(endpoint, result_producer, retry = 0):
+    '''Do HTTP GET on "endpoint" & return results of calling result_producer.'''
+    (resp, error) = net('get', endpoint)
+    if not error:
+        if __debug__: log(f'got result from {endpoint}')
+        return result_producer(resp)
+    elif isinstance(error, NoContent):
+        if __debug__: log(f'got empty content from {endpoint}')
+        return result_producer(None)
+    elif isinstance(error, RateLimitExceeded):
+        retry += 1
+        if retry > _MAX_SLEEP_CYCLES:
+            raise TindError(f'Rate limit exceeded for {endpoint}')
+        else:
+            if __debug__: log(f'hit rate limit; pausing {_RATE_LIMIT_SLEEP}s')
+            wait(_RATE_LIMIT_SLEEP)
+            return result_from_tind(endpoint, result_producer, retry = retry)
+    else:
+        if __debug__: log(f'got {type(error)} error for {endpoint}')
+        raise TindError(f'Problem contacting {endpoint}: {str(error)}')
