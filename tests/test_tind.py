@@ -1,8 +1,5 @@
-from   datetime import datetime, timedelta
 import os
-import smtplib
 import sys
-from   time import time
 
 try:
     thisdir = os.path.dirname(os.path.abspath(__file__))
