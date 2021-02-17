@@ -314,7 +314,7 @@ class Tind():
             raise TindError(f'Problem contacting {self.server_url}: {str(error)}')
 
 
-    def _thumbnail_for_tind_id(self, id):
+    def _thumbnail_for_tind_id(self, id, retry = 0):
         (resp, error) = net('get', _THUMBNAIL_FOR_TIND_ID.format(self.server_url, id))
         if not error:
             if __debug__: log(f'got thumbnail data for {id}')
@@ -335,7 +335,7 @@ class Tind():
             return ''
         elif isinstance(error, NoContent):
             if __debug__: log(f'got empty json content for thumbnail for {id}')
-            return Record()
+            return ''
         elif isinstance(error, RateLimitExceeded):
             retry += 1
             if retry > _MAX_SLEEP_CYCLES:
@@ -343,7 +343,7 @@ class Tind():
             else:
                 if __debug__: log(f'hit rate limit; pausing {_RATE_LIMIT_SLEEP}s')
                 wait(_RATE_LIMIT_SLEEP)
-                return self._record_from_server(search_template, id, retry = retry)
+                return self._thumbnail_for_tind_id(id, retry = retry)
         else:
             if __debug__: log(f'got {type(error)} error for {id}')
             raise TindError(f'Problem contacting {self.server_url}: {str(error)}')
