@@ -33,11 +33,12 @@ __license__     = 'BSD 3-clause'
 # .............................................................................
 
 from .exceptions import TindError, PotionError, NotFound
-from .item       import Item
-from .record     import Record
+from .item       import TindItem
+from .record     import TindRecord
 from .tind       import Tind
 
-__all__ = ['Tind', 'Record', 'Item', 'TindError', 'PotionError', 'NotFound']
+__all__ = ['Tind', 'TindRecord', 'TindItem',
+           'TindError', 'PotionError', 'NotFound']
 
 
 # Miscellaneous utilities.

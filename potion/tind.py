@@ -32,9 +32,9 @@ if __debug__:
     from sidetrack import log
 
 from .exceptions import *
-from .item import Item
+from .item import TindItem
 from .thumbnail_utils import thumbnail_from_google, thumbnail_from_amazon
-from .record import Record
+from .record import TindRecord
 
 
 # Constants.
@@ -79,17 +79,17 @@ class Tind():
 
 
     def record(self, tind_id = None, marc_xml = None):
-        '''Create a Record object given either a TIND id or MARC XML from TIND.
+        '''Create a TindRecord object given either a TIND id or MARC XML.
 
         Keyword arguments "tind_id" and "marc_xml" are mutually exclusive.
 
         If "tind_id" is given, this will search the TIND server using the id,
-        download the MARC XML returned by TIND, create a Record object based
-        on the data, then separately, also use TIND's Item record API to find
-        all the items/holdings for the record, create corresponding Item
-        objects for each, and add them to the "items" list within the Record
-        object. If the TIND server does not return a result for the id, this
-        method raises a potion.NotFound exception.
+        download the MARC XML returned by TIND, create a TindRecord object
+        based on the data, then separately, also use TIND's TindItem record
+        API to find all the items/holdings for the record, create
+        corresponding TindItem objects for each, and add them to the "items"
+        list within the TindRecord object. If the TIND server does not return
+        a result for the id, this method raises a NotFound exception.
 
         If "marc_xml" is given, the XML must have been obtained using the
         MARC XML export feature of TIND.  This method will skip the
@@ -98,7 +98,7 @@ class Tind():
         the case of tind_id.
 
         If neither "tind_id" nor "marc_xml" is given, this method returns an
-        empty Record object.
+        empty TindRecord object.
         '''
         if tind_id and marc_xml:
             raise ValueError(f'"tind_id" and "marc_xml" are mutually exclusive.')
@@ -113,7 +113,7 @@ class Tind():
                 raise ValueError(f'marc_xml argument does not appear to be XML.')
             record = self._record_from_xml(marc_xml)
         else:
-            return Record()
+            return TindRecord()
 
         if record:
             record.items = self._items_for_tind_id(tind_id or record.tind_id)
@@ -126,21 +126,22 @@ class Tind():
 
 
     def item(self, barcode = None):
-        '''Create an Item record given a barcode value.
+        '''Create a TindItem object given a barcode value.
 
         This will contact the TIND server and perform a search using the
-        barcode value, then using the data returned, create a Record object
-        with an Item object within it, and finally return the Item object.
-        (Item objects contain a property referencing their parent Record
-        objects, so callers can get the Record given the Item object.
+        barcode value, then using the data returned, create a TindRecord
+        object with an TindItem object within it, and finally return the
+        TindItem object.  (TindItem objects contain a property referencing
+        their parent TindRecord objects, so callers can get the TindRecord
+        given the TindItem object.)
 
         If the TIND server does not return a result for the barcode, this
-        method raises a potion.NotFound exception
+        method raises a NotFound exception.
 
-        If no barcode is given, this returns an empty Item object.
+        If no barcode is given, this returns an empty TindItem object.
         '''
         if not barcode:
-            return Item()
+            return TindItem()
         barcode = str(barcode)
         if not barcode.isdigit():
             raise ValueError(f'Invalid argument: {barcode} is not a number.')
@@ -152,7 +153,7 @@ class Tind():
             for item in record.items:
                 if item.barcode == barcode:
                     return item
-            raise PotionError('Record-Item mismatch -- please report this error.')
+            raise PotionError('TindRecord-TindItem mismatch -- please report this.')
         else:
             raise NotFound(f'No record found for {barcode} in {self.server_url}')
 
@@ -166,7 +167,7 @@ class Tind():
             return record
         elif isinstance(error, NoContent):
             if __debug__: log(f'got empty xml content for {id}')
-            return Record()
+            return TindRecord()
         elif isinstance(error, RateLimitExceeded):
             retry += 1
             if retry > _MAX_SLEEP_CYCLES:
@@ -183,7 +184,7 @@ class Tind():
     def _record_from_xml(self, xml):
         '''Initialize this record given MARC XML as a string.'''
 
-        record = Record()
+        record = TindRecord()
         record.tind_server = self.server_url
         # Save the XML internally in case it's useful.
         record._xml = xml
@@ -289,14 +290,14 @@ class Tind():
                 if __debug__: log(f'results from server missing "data" key')
                 raise TindError(f'Unexpected result from {self.server_url}')
             for item in data['items']:
-                results.append(Item(barcode     = item.get('barcode', ''),
-                                    type        = item.get('item_type', ''),
-                                    volume      = item.get('item_volume', ''),
-                                    call_number = item.get('call_number', ''),
-                                    description = item.get('description', ''),
-                                    library     = item.get('library', '',),
-                                    location    = item.get('location', ''),
-                                    status      = item.get('status', '')))
+                results.append(TindItem(barcode     = item.get('barcode', ''),
+                                        type        = item.get('item_type', ''),
+                                        volume      = item.get('item_volume', ''),
+                                        call_number = item.get('call_number', ''),
+                                        description = item.get('description', ''),
+                                        library     = item.get('library', '',),
+                                        location    = item.get('location', ''),
+                                        status      = item.get('status', '')))
             return results
         elif isinstance(error, NoContent):
             if __debug__: log(f'got empty json content for {id}')

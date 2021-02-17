@@ -1,5 +1,5 @@
 '''
-record.py: the Record object class for Potion
+record.py: the TindRecord object class for Potion
 
 Authors
 -------
@@ -14,7 +14,7 @@ is open-source software released under a 3-clause BSD license.  Please see the
 file "LICENSE" for more information.
 '''
 
-class Record():
+class TindRecord():
     '''Object class for representing a record from TIND.'''
 
     # The reason for an explicit list of fields here is so that we can use it
@@ -46,7 +46,7 @@ class Record():
 
     def __str__(self):
         details = f' {self.url}' if self.url else ''
-        return f'TIND Record{details}'
+        return f'TindRecord{details}'
 
 
     def __repr__(self):
@@ -59,9 +59,9 @@ class Record():
                 else:
                     field_values.append(f'{field}="{value}"')
         if field_values:
-            return 'Record(' + ', '.join(field_values) + ')'
+            return 'TindRecord(' + ', '.join(field_values) + ')'
         else:
-            return 'Record()'
+            return 'TindRecord()'
 
 
     def __eq__(self, other):

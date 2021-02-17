@@ -1,5 +1,5 @@
 '''
-item.py: the Item object class for Potion
+item.py: the TindItem object class for Potion
 
 Authors
 -------
@@ -14,15 +14,15 @@ is open-source software released under a 3-clause BSD license.  Please see the
 file "LICENSE" for more information.
 '''
 
-from .record import Record
+from .record import TindRecord
 
-class Item():
+class TindItem():
     '''Object class for representing an item within a record in TIND.'''
 
     # The reason for an explicit list of fields here is so that we can use it
     # in the definition of __repr__().
     __fields = {
-        'parent'      : type(Record),
+        'parent'      : type(TindRecord),
         'barcode'     : str,
         'type'        : str,
         'volume'      : str,
@@ -45,7 +45,7 @@ class Item():
 
     def __str__(self):
         details = f' {self.barcode}' if self.barcode else ''
-        return f'TIND Item{details}'
+        return f'TindItem{details}'
 
 
     def __repr__(self):
@@ -58,9 +58,9 @@ class Item():
                 else:
                     field_values.append(f'{field}="{value}"')
         if field_values:
-            return 'Item(' + ', '.join(field_values) + ')'
+            return 'TindItem(' + ', '.join(field_values) + ')'
         else:
-            return 'Item()'
+            return 'TindItem()'
 
 
     def __eq__(self, other):
