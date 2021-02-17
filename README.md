@@ -4,8 +4,9 @@ Potion<img width="6%" align="right" src="https://github.com/caltechlibrary/potio
 Potion (_"**P**ython **o**bjects for **TI**ND **o**peratio**n**s"_) is a Python package for getting basic data from a TIND server.
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg?style=flat-square)](https://choosealicense.com/licenses/bsd-3-clause)
-[![Python](https://img.shields.io/badge/Python-3.6+-brightgreen.svg?style=flat-square)](http://shields.io)
 [![Latest release](https://img.shields.io/github/v/release/caltechlibrary/potion.svg?style=flat-square&color=b44e88)](https://github.com/caltechlibrary/potion/releases)
+[![Python](https://img.shields.io/badge/Python-3.6+-brightgreen.svg?style=flat-square)](http://shields.io)
+[![PyPI](https://img.shields.io/pypi/v/potion.svg?style=flat-square&color=orange)](https://pypi.org/project/potion/)
 
 
 Table of contents
@@ -48,7 +49,9 @@ Usage
 
 Potion is a application programming interface (API) library; it does not offer a command-line interface.  There are three main option classes in Potion: `Tind`, `TindRecord`, and `TindItem`.  The rest of this section describes these classes and how to use them.
 
-### `Tind`
+### Object classes
+
+#### `Tind`
 
 An object of the `Tind` class serves as the main point of interaction with a TIND server.  The constructor for `Tind` takes only one argument: the base network URL for the server.  Using it is very simple:
 
@@ -61,7 +64,7 @@ tind = Tind('https://caltech.tind.io')
 An instance of the `Tind` class offers just two methods: `record`, to create `TindRecord` objects, and `item`, to create `TindItem` objects.  These object classes are described below.
 
 
-### `TindRecord`
+#### `TindRecord`
 
 This object class represents a bibliographic record in a TIND database.  The fields of the record are derived from the MARC representation of the bibliographic record in TIND.  The following are the fields in a record object in Potion:
 
@@ -80,7 +83,7 @@ This object class represents a bibliographic record in a TIND database.  The fie
 | `thumbnail_url` | string | The URL of the cover image in TIND (if any)             |
 | `items`         | list   | A list of `TindItem` objects                            |
 
-A `TindRecord` object can be obtained using the factory method `record(...)` on the `Tind` interface object.  This method takes one of two mutually-exclusive arguments: either a TIND record identifier, or a MARC XML string obtained from a TIND server for a TIND bibliographic record.  Here is an example:
+A `TindRecord` object can be obtained using the factory method `record(...)` on the `Tind` interface object.  This method takes one of two mutually-exclusive keyword arguments: either a TIND record identifier, or a MARC XML string obtained from a TIND server for a TIND bibliographic record.  Here is an example:
 
 ```python
 from potion import Tind
@@ -89,8 +92,22 @@ tind = Tind('https://caltech.tind.io')
 rec  = tind.record(tind_id = 680311)
 ```
 
+Note the use of the keyword argument.  To create a record from an existing MARC XML file obtained from a TIND server some other way, 
 
-### `TindItem`
+```python
+from potion import Tind
+
+with open('downloaded_marc.xml', 'r') as xf:
+    xml_string = xf.read()
+
+tind = Tind('https://caltech.tind.io')
+rec  = tind.record(marc_xml = xml_string)
+```
+
+Calling the `record` method on `Tind` will return an empty `TindRecord` object.
+
+
+#### `TindItem`
     
 Conceptually, in TIND an "item" is a specific copy of a work; this copy has a barcode and other item-specific information such as a location.  Each item is associated with a TIND record (represented by a `TindRecord` in Potion, described above).  The following are the fields in an item object in Potion:
 
@@ -106,7 +123,7 @@ Conceptually, in TIND an "item" is a specific copy of a work; this copy has a ba
 | `location`    | string       | The location of the item in the library             |
 | `status`      | string       | Status of the item listed in TIND                   |
 
-A `TindRecord` object can be obtained using the factory method `item(...)` on the `Tind` interface object.  This method takes a single argument: a barcode.  Here is an example:
+A `TindItem` object can be obtained using the factory method `item(...)` on the `Tind` interface object.  This method takes a single argument: a barcode.  Here is an example:
 
 ```python
 from potion import Tind
@@ -114,6 +131,23 @@ from potion import Tind
 tind = Tind('https://caltech.tind.io')
 rec  = tind.item(35047018228114)
 ```
+
+Item records have parent pointers to the corresponding bibliographic record, in the form of a `TindRecord`.  Thus, given an item object, it's possible to look up the rest of the bibliographic record simply by dereferencing the `.parent` field:
+
+```python
+from potion import Tind
+
+tind = Tind('https://caltech.tind.io')
+item = tind.item(35047018228114)
+print(item.parent.title)
+```
+
+Calling the `item` method on `Tind` will return an empty `TindItem` object.
+
+
+### Additional notes
+
+Potion fills out the `thumbnail_url` field of a `TindRecord` object by using TIND's API for the purpose.  This only retrieves what a given TIND database contains for the cover image of a work, and in particular, other sources such as the [Open Library Covers API](https://openlibrary.org/dev/docs/api/covers) may have covers that a TIND database lacks.
 
 
 Getting help
