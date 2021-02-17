@@ -278,22 +278,23 @@ def test_repr1():
     assert repr(r) == ('TindItem(parent="TindRecord '
                        'https://caltech.tind.io/record/990468", '
                        'barcode="35047019626837", type="Book", '
-                       'call_number="QC806.L67 2020", description="c.1", '
-                       'library="Sherman Fairchild Library", '
+                       'call_number="QC806.L67 2020", '
+                       'description="c.1", library="Sherman Fairchild Library", '
                        'location="SFL1 Closed Reserve (24-hr)", status="on shelf")')
+
+
 
 def test_repr2():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(676897)
     assert str(r) == 'TindRecord https://caltech.tind.io/record/676897'
-    assert repr(r) == ('TindRecord(tind_id="676897", '
-                       'url="https://caltech.tind.io/record/676897", '
-                       'title="The diamond age", author="Neal Stephenson", '
-                       'edition="Bantam trade pbk. reissue", year="2003", '
-                       'isbn_issn=[\'0553380966\'], description="499 p. ; 21 cm", '
-                       'thumbnail="https://bookcover.tind.io//bookcover/thumbnails/0553380966_large", '
+    assert repr(r) == ('TindRecord(tind_id="676897", title="The diamond age", '
+                       'author="Neal Stephenson", edition="Bantam trade pbk. reissue", '
+                       'year="2003", isbn_issn=[\'0553380966\'], '
+                       'description="499 p. ; 21 cm", '
+                       'thumbnail_url="https://bookcover.tind.io//bookcover/thumbnails/0553380966_large", '
                        'items=[TindItem(parent="TindRecord https://caltech.tind.io/record/676897", '
                        'barcode="35047018297788", type="Book", '
-                       'call_number="PS3569.T3868 D53 2003", '
-                       'description="c.1", library="Millikan Library", '
+                       'call_number="PS3569.T3868 D53 2003", description="c.1", '
+                       'library="Millikan Library", '
                        'location="Millikan 9 leisure collection", status="on shelf")])')
