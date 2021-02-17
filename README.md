@@ -1,10 +1,10 @@
 Potion<img width="5%" align="right" src="https://github.com/caltechlibrary/potion/raw/main/.graphics/potion-icon.png">
 ======
 
-Potion (_"**P**ython **o**bjects for **TI**ND **o**peratio**n**s"_) is a Python package for getting basic data from a TIND.io server.
+Potion (_"**P**ython **o**bjects for **TI**ND **o**peratio**n**s"_) is a Python package for getting basic data from a TIND server.
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg?style=flat-square)](https://choosealicense.com/licenses/bsd-3-clause)
-[![Latest release](https://img.shields.io/github/v/release/caltechlibrary/template.svg?style=flat-square&color=b44e88)](https://github.com/caltechlibrary/template/releases)
+[![Latest release](https://img.shields.io/github/v/release/caltechlibrary/potion.svg?style=flat-square&color=b44e88)](https://github.com/caltechlibrary/potion/releases)
 
 
 Table of contents
@@ -21,6 +21,10 @@ Table of contents
 
 Introduction
 ------------
+
+[TIND](https://tind.io) is an [integrated library system](https://en.wikipedia.org/wiki/Integrated_library_system). The Caltech Library uses a hosted solution by TIND for its [library catalog](https://caltech.tind.io).  Recent versions of TIND provide a REST API for getting a subset of information using network calls.  To make writing interfaces and automation scripts in Python easier, the Caltech Library [Digital Library Development team](https://www.library.caltech.edu/staff?&field_directory_department%5B0%5D=754) developed Potion (_"**P**ython **o**bjects for **TI**ND **o**peratio**n**s"_), a Python package that provides an object-oriented interface to data in a TIND catalog.
+
+Potion is not a complete API for interacting with TIND instances.  At this time, it provides an interface for retrieving only  two kinds of objects: bibliographic records, and items/holdings associated with those records.
 
 
 Installation
@@ -58,6 +62,6 @@ This work was funded by the California Institute of Technology Library.
 <div align="center">
   <br>
   <a href="https://www.caltech.edu">
-    <img width="100" height="100" src="https://raw.githubusercontent.com/caltechlibrary/template/main/.graphics/caltech-round.png">
+    <img width="100" height="100" src="https://raw.githubusercontent.com/caltechlibrary/potion/main/.graphics/caltech-round.png">
   </a>
 </div>
