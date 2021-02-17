@@ -6,7 +6,7 @@
   "codeRepository": "https://github.com/caltechlibrary/POTION",
   "issueTracker": "https://github.com/caltechlibrary/POTION/issues",
   "license": "https://github.com/caltechlibrary/POTION/blob/master/LICENSE",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": [
     {
       "@type": "Person",
