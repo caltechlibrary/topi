@@ -21,7 +21,7 @@ if __debug__:
     from sidetrack import log
 
 from .tind_utils import result_from_api
-from .exceptions import TopiError
+from .exceptions import DataMismatchError
 
 
 # Constants.
@@ -148,7 +148,7 @@ class TindRecord():
             except JSONDecodeError as ex:
                 raise TindError(f'Malformed result from {self._server_url}: str(ex)')
             except TypeError as ex:
-                raise TopiError('Error getting thumbnail -- please report this.')
+                raise DataMismatchError(f'Unexpected data returned by {self._server_url}.')
 
             if 'big' in data:
                 if __debug__: log(f'thumbnail for {self.tind_id} is {data["big"]}')

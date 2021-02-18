@@ -32,13 +32,13 @@ __license__     = 'BSD 3-clause'
 # Exports.
 # .............................................................................
 
-from .exceptions import TindError, TopiError, NotFound
+from .exceptions import TindError, DataMismatchError, NotFound
 from .item       import TindItem
 from .record     import TindRecord
 from .tind       import Tind
 
 __all__ = ['Tind', 'TindRecord', 'TindItem',
-           'TindError', 'TopiError', 'NotFound']
+           'TindError', 'DataMismatchError', 'NotFound']
 
 
 # Miscellaneous utilities.
