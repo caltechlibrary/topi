@@ -140,7 +140,7 @@ class TindRecord():
         '''Return the URL for the thumbnail in TIND for this record.'''
         def response_handler(resp):
             if not resp:
-                if __debug__: log(f'got empty json for thumbnail for {id}')
+                if __debug__: log(f'got empty json for thumbnail for {self.tind_id}')
                 return ''
             try:
                 data = json.loads(resp.text)
@@ -150,13 +150,13 @@ class TindRecord():
                 raise PotionError('Error getting thumbnail -- please report this.')
             if data:
                 if 'big' in data:
-                    if __debug__: log(f'thumbnail for {id} is {data["big"]}')
+                    if __debug__: log(f'thumbnail for {self.tind_id} is {data["big"]}')
                     return data['big']
                 elif 'small' in data:
-                    if __debug__: log(f'thumbnail for {id} is {data["small"]}')
+                    if __debug__: log(f'thumbnail for {self.tind_id} is {data["small"]}')
                     return data['small']
             else:
-                if __debug__: log(f'could not find thumbnail for {id}')
+                if __debug__: log(f'could not find thumbnail for {self.tind_id}')
                 return ''
 
         endpoint = _THUMBNAIL_FOR_TIND_ID.format(self._server_url, self.tind_id)

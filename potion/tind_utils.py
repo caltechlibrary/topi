@@ -15,11 +15,21 @@ file "LICENSE" for more information.
 '''
 
 from   commonpy.network_utils import net
+from   commonpy.exceptions import NoContent, ServiceFailure, RateLimitExceeded
 
 if __debug__:
     from sidetrack import log
 
 from .exceptions import *
+
+
+# Internal Constants.
+# .............................................................................
+
+# Time in seconds we pause if we hit the rate limit, and number of times we
+# repeatedly wait before we give up entirely.
+_RATE_LIMIT_SLEEP = 15
+_MAX_SLEEP_CYCLES = 8
 
 
 # Exported functions.
