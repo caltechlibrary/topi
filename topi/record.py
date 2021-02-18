@@ -149,13 +149,16 @@ class TindRecord():
                 raise TindError(f'Malformed result from {self._server_url}: str(ex)')
             except TypeError as ex:
                 raise TopiError('Error getting thumbnail -- please report this.')
-            if data:
-                if 'big' in data:
-                    if __debug__: log(f'thumbnail for {self.tind_id} is {data["big"]}')
-                    return data['big']
-                elif 'small' in data:
-                    if __debug__: log(f'thumbnail for {self.tind_id} is {data["small"]}')
-                    return data['small']
+
+            if 'big' in data:
+                if __debug__: log(f'thumbnail for {self.tind_id} is {data["big"]}')
+                return data['big']
+            elif 'medium' in data:
+                if __debug__: log(f'thumbnail for {self.tind_id} is {data["medium"]}')
+                return data['medium']
+            elif 'small' in data:
+                if __debug__: log(f'thumbnail for {self.tind_id} is {data["small"]}')
+                return data['small']
             else:
                 if __debug__: log(f'could not find thumbnail for {self.tind_id}')
                 return ''
