@@ -14,6 +14,27 @@ is open-source software released under a 3-clause BSD license.  Please see the
 file "LICENSE" for more information.
 '''
 
+import json
+from   json import JSONDecodeError
+
+if __debug__:
+    from sidetrack import log
+
+from .tind_utils import result_from_api
+
+
+# Constants.
+# .............................................................................
+
+# URL template for thumbnail images. The result is returned as JSON.
+# The first placeholder is for the host URL; the second is for a TIND record id.
+# Use Python .format() to substitute the relevant values into the string.
+_THUMBNAIL_FOR_TIND_ID = '{}/nanna/thumbnail/{}'
+
+
+# Class definitions.
+# .............................................................................
+
 class TindRecord():
     '''Object class for representing a record from TIND.'''
 
@@ -35,13 +56,27 @@ class TindRecord():
     }
 
 
-    def __init__(self, **kwargs):
+    def __init__(self, server_url = None, **kwargs):
         # Always first initialize every field.
         for field, field_type in self.__fields.items():
             setattr(self, field, ([] if field_type == list else ''))
         # Set values if given arguments.
         for field, value in kwargs.items():
             setattr(self, field, value)
+
+        # Internal variables.
+        self._server_url = server_url
+        self._saved_thumbnail_url = None
+
+
+    def __getattribute__(self, attr):
+        if attr == 'thumbnail_url':
+            if self._saved_thumbnail_url is not None:
+                return self._saved_thumbnail_url
+            if __debug__: log(f'getting thumbnail url')
+            self._saved_thumbnail_url = self._thumbnail_for_record()
+            return self._saved_thumbnail_url
+        return object.__getattribute__(self, attr)
 
 
     def __str__(self):
@@ -99,3 +134,30 @@ class TindRecord():
         if isinstance(other, type(self)):
             return not self.tind_id < other.tind_id
         return NotImplemented
+
+
+    def _thumbnail_for_record(self, retry = 0):
+        '''Return the URL for the thumbnail in TIND for this record.'''
+        def response_handler(resp):
+            if not resp:
+                if __debug__: log(f'got empty json for thumbnail for {id}')
+                return ''
+            try:
+                data = json.loads(resp.text)
+            except JSONDecodeError as ex:
+                raise TindError(f'Malformed result from {self._server_url}: str(ex)')
+            except TypeError as ex:
+                raise PotionError('Error getting thumbnail -- please report this.')
+            if data:
+                if 'big' in data:
+                    if __debug__: log(f'thumbnail for {id} is {data["big"]}')
+                    return data['big']
+                elif 'small' in data:
+                    if __debug__: log(f'thumbnail for {id} is {data["small"]}')
+                    return data['small']
+            else:
+                if __debug__: log(f'could not find thumbnail for {id}')
+                return ''
+
+        endpoint = _THUMBNAIL_FOR_TIND_ID.format(self._server_url, self.tind_id)
+        return result_from_api(endpoint, response_handler)

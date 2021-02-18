@@ -16,6 +16,10 @@ file "LICENSE" for more information.
 
 from .record import TindRecord
 
+
+# Class definitions.
+# .............................................................................
+
 class TindItem():
     '''Object class for representing an item within a record in TIND.'''
 

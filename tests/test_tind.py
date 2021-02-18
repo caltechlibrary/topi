@@ -9,6 +9,9 @@ except:
 
 from potion import Tind, TindItem, TindRecord
 
+if __debug__:
+    from sidetrack import log, set_debug
+
 
 MARC_XML = r'''<?xml version="1.0" encoding="UTF-8"?>
 <collection xmlns="http://www.loc.gov/MARC21/slim">
