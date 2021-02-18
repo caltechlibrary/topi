@@ -7,7 +7,7 @@ try:
 except:
     sys.path.append('..')
 
-from potion import Tind, TindItem, TindRecord
+from topi import Tind, TindItem, TindRecord
 
 if __debug__:
     from sidetrack import log, set_debug
