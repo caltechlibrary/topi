@@ -57,11 +57,6 @@ _MARCXML_FOR_TIND_ID = '{}/search?recid={}&of=xm'
 # Use Python .format() to substitute the relevant values into the string.
 _ITEMS_FOR_TIND_ID = '{}/nanna/bibcirc/{}/details'
 
-# Time in seconds we pause if we hit the rate limit, and number of times we
-# repeatedly wait before we give up entirely.
-_RATE_LIMIT_SLEEP = 15
-_MAX_SLEEP_CYCLES = 8
-
 
 # Class definitions.
 # .............................................................................
