@@ -1,4 +1,4 @@
-Topi<img width="6%" align="right" src="https://github.com/caltechlibrary/topi/raw/main/.graphics/topi-icon.png">
+Topi<img width="11%" align="right" src="https://github.com/caltechlibrary/topi/raw/main/.graphics/topi-icon.png">
 ======
 
 Topi (_"**T**IND **O**bject **P**ython **I**nterface"_) is a Python package for getting basic data from a TIND server.
@@ -176,7 +176,7 @@ Acknowledgments
 
 This work was funded by the California Institute of Technology Library.
 
-The [vector artwork](https://thenounproject.com/term/antelope/931009/) of a topi, used as the icon for this repository, was created by [parkjisun](https://thenounproject.com/naripuru/) for the Noun Project.  It is licensed under the Creative Commons [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/) license.
+The [vector artwork](https://thenounproject.com/term/antelope/931009/) of an antelope, used as the icon for this repository, was created by [parkjisun](https://thenounproject.com/naripuru/) for the Noun Project.  It is licensed under the Creative Commons [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/) license.
 
 <div align="center">
   <br>
