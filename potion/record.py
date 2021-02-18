@@ -21,6 +21,7 @@ if __debug__:
     from sidetrack import log
 
 from .tind_utils import result_from_api
+from .exceptions import PotionError
 
 
 # Constants.
