@@ -104,7 +104,7 @@ tind = Tind('https://caltech.tind.io')
 rec  = tind.record(marc_xml = xml_string)
 ```
 
-Calling the `record` method on `Tind` will return an empty `TindRecord` object.
+The `thumbnail_url` field is lazily evaluated: its value is only obtained from the TIND server the first time the field is accessed by a calling program.  This is more efficient for situations where the thumbnail is never needed by an application, but it does mean that there is a delay the first time the field is accessed.
 
 
 #### `TindItem`
