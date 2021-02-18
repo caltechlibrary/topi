@@ -5,6 +5,7 @@ Potion (_"**P**ython **o**bjects for **TI**ND **o**peratio**n**s"_) is a Python 
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg?style=flat-square)](https://choosealicense.com/licenses/bsd-3-clause)
 [![Latest release](https://img.shields.io/github/v/release/caltechlibrary/potion.svg?style=flat-square&color=b44e88)](https://github.com/caltechlibrary/potion/releases)
+[![DOI](https://img.shields.io/badge/dynamic/json.svg?label=DOI&style=flat-square&colorA=gray&colorB=navy&query=$.metadata.doi&uri=https://data.caltech.edu/api/record/1885)](https://data.caltech.edu/records/1885)
 [![Python](https://img.shields.io/badge/Python-3.6+-brightgreen.svg?style=flat-square)](http://shields.io)
 [![PyPI](https://img.shields.io/pypi/v/potion.svg?style=flat-square&color=orange)](https://pypi.org/project/potion/)
 
