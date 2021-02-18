@@ -1,12 +1,12 @@
 {
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
-  "description": "Python Objects for TIND OperatioNs",
-  "name": "Potion",
-  "codeRepository": "https://github.com/caltechlibrary/POTION",
-  "issueTracker": "https://github.com/caltechlibrary/POTION/issues",
-  "license": "https://github.com/caltechlibrary/POTION/blob/master/LICENSE",
-  "version": "0.0.1",
+  "description": "TIND Object Python Interface",
+  "name": "Topi",
+  "codeRepository": "https://github.com/caltechlibrary/topi",
+  "issueTracker": "https://github.com/caltechlibrary/topi/issues",
+  "license": "https://github.com/caltechlibrary/topi/blob/master/LICENSE",
+  "version": "0.0.2",
   "author": [
     {
       "@type": "Person",
@@ -17,7 +17,7 @@
       "@id": "https://orcid.org/0000-0001-9105-5960"
     }],
   "developmentStatus": "active",
-  "downloadUrl": "https://github.com/caltechlibrary/POTION/archive/master.zip",
+  "downloadUrl": "https://github.com/caltechlibrary/topi/archive/master.zip",
   "keywords": [
     "TIND.io",
     "library information",

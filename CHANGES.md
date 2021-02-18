@@ -1,9 +1,13 @@
-Change log for REPOSITORY
-=========================
+Change log for Topi
+===================
 
-Version 0.0.0
+Version 0.0.2
 -------------
 
-* Write about a change here
-* Write about another change here
-* Write about a 3rd change
+Renamed the project to Topi (TIND Object Python Interface) to avoid a name clash on PyPI for the name "Potion".
+
+
+Version 0.0.1
+-------------
+
+First release
