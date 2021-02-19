@@ -89,15 +89,9 @@ class TindRecord():
         field_values = []
         for field in self.__fields.keys():
             value = getattr(self, field, None)
-            if value:
-                if isinstance(value, list):
-                    field_values.append(f'{field}={value}')
-                else:
-                    field_values.append(f'{field}="{value}"')
-        if field_values:
-            return 'TindRecord(' + ', '.join(field_values) + ')'
-        else:
-            return 'TindRecord()'
+            printed_value = value if isinstance(value, list) else f'"{value}"'
+            field_values.append(f'{field}={printed_value}')
+        return 'TindRecord(' + ', '.join(field_values) + ')'
 
 
     def __eq__(self, other):
