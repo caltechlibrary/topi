@@ -1,6 +1,12 @@
 Change log for Topi
 ===================
 
+Version 1.0.1
+-------------
+
+* Change approach for setting `tind_url` field on `TindRecord`. (Somehow the test cases previously didn't catch that it wasn't being set at all.)
+
+
 Version 1.0.0
 -------------
 

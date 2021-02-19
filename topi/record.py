@@ -58,16 +58,16 @@ class TindRecord():
 
 
     def __init__(self, server_url = None, **kwargs):
+        # Internal variables.  Need to set these first.
+        self._server_url = server_url
+        self._saved_thumbnail_url = None
+
         # Always first initialize every field.
         for field, field_type in self.__fields.items():
             setattr(self, field, ([] if field_type == list else ''))
         # Set values if given arguments.
         for field, value in kwargs.items():
             setattr(self, field, value)
-
-        # Internal variables.
-        self._server_url = server_url
-        self._saved_thumbnail_url = None
 
 
     def __getattribute__(self, attr):
@@ -80,14 +80,20 @@ class TindRecord():
         return object.__getattribute__(self, attr)
 
 
+    def __setattr__(self, attr, value):
+        if attr == 'tind_id' and getattr(self, "_server_url", None):
+            object.__setattr__(self, 'tind_url', f'{self._server_url}/record/{value}')
+        object.__setattr__(self, attr, value)
+
+
     def __str__(self):
-        details = f' {self.url}' if self.url else ''
+        details = f' {self.tind_id}' if self.tind_id else ''
         return f'TindRecord{details}'
 
 
     def __repr__(self):
         field_values = []
-        for field in self.__fields.keys():
+        for field in sorted(self.__fields.keys()):
             value = getattr(self, field, None)
             printed_value = value if isinstance(value, list) else f'"{value}"'
             field_values.append(f'{field}={printed_value}')

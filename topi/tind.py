@@ -248,7 +248,6 @@ class Tind():
         record.edition     = cleaned(record.edition)
         record.subtitle    = cleaned(record.subtitle)
         record.description = cleaned(record.description)
-        record.url         = self._url_for_tind_record(record.tind_id)
 
         return record
 
@@ -283,10 +282,6 @@ class Tind():
 
         endpoint = _ITEMS_FOR_TIND_ID.format(self.server_url, id)
         return result_from_api(endpoint, response_handler)
-
-
-    def _url_for_tind_record(self, tind_id):
-        return f'{self.server_url}/record/{tind_id}'
 
 
 # Miscellaneous helpers.

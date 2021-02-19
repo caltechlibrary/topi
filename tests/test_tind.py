@@ -238,7 +238,7 @@ def test_tind_id5():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(tind_id = 705063)
     assert r.tind_id    == '705063'
-    assert r.url        == 'https://caltech.tind.io/record/705063'
+    assert r.tind_url   == 'https://caltech.tind.io/record/705063'
     assert r.title      == 'Python essential reference'
     assert r.author     == 'David M. Beazley'
     assert r.edition    == '4th ed'
@@ -255,7 +255,7 @@ def test_tind_id6():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(tind_id = 574858)
     assert r.tind_id    == '574858'
-    assert r.url        == 'https://caltech.tind.io/record/574858'
+    assert r.tind_url   == 'https://caltech.tind.io/record/574858'
     assert r.title      == 'Feedback control theory'
     assert r.author     == 'John C. Doyle, Bruce A. Francis, Allen R. Tannenbaum'
     assert r.year       == '1992'
@@ -276,28 +276,30 @@ def test_tind_id6():
 
 def test_repr1():
     tind = Tind('https://caltech.tind.io')
-    r = tind.item(barcode = 35047019626837)
-    assert str(r) == 'TindItem 35047019626837'
-    assert repr(r) == ('TindItem(parent="TindRecord '
-                       'https://caltech.tind.io/record/990468", '
-                       'barcode="35047019626837", type="Book", '
-                       'call_number="QC806.L67 2020", '
-                       'description="c.1", library="Sherman Fairchild Library", '
-                       'location="SFL1 Closed Reserve (24-hr)", status="on shelf")')
-
+    item = tind.item(barcode = 35047019626837)
+    assert str(item) == 'TindItem 35047019626837'
+    assert repr(item) == ('TindItem(barcode="35047019626837", '
+                          'call_number="QC806.L67 2020", '
+                          'description="c.1", library="Sherman Fairchild Library", '
+                          'location="SFL1 Closed Reserve (24-hr)", '
+                          'parent="TindRecord 990468", status="on shelf", '
+                          'type="Book", volume="")')
 
 
 def test_repr2():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(676897)
-    assert str(r) == 'TindRecord https://caltech.tind.io/record/676897'
-    assert repr(r) == ('TindRecord(tind_id="676897", title="The diamond age", '
-                       'author="Neal Stephenson", edition="Bantam trade pbk. reissue", '
-                       'year="2003", isbn_issn=[\'0553380966\'], '
+    assert str(r) == 'TindRecord 676897'
+    assert repr(r) == ('TindRecord(author="Neal Stephenson", bib_note="", '
                        'description="499 p. ; 21 cm", '
+                       'edition="Bantam trade pbk. reissue", '
+                       'isbn_issn=[\'0553380966\'], '
+                       'items=[TindItem(barcode="35047018297788", '
+                       'call_number="PS3569.T3868 D53 2003", '
+                       'description="c.1", library="Millikan Library", '
+                       'location="Millikan 9 leisure collection", '
+                       'parent="TindRecord 676897", status="on shelf", '
+                       'type="Book", volume="None")], subtitle="", '
                        'thumbnail_url="https://bookcover.tind.io//bookcover/thumbnails/0553380966_large", '
-                       'items=[TindItem(parent="TindRecord https://caltech.tind.io/record/676897", '
-                       'barcode="35047018297788", type="Book", '
-                       'call_number="PS3569.T3868 D53 2003", description="c.1", '
-                       'library="Millikan Library", '
-                       'location="Millikan 9 leisure collection", status="on shelf")])')
+                       'tind_id="676897", tind_url="https://caltech.tind.io/record/676897", '
+                       'title="The diamond age", year="2003")')
