@@ -32,7 +32,7 @@ class TindError(TopiException):
     '''Unrecoverable problem involving interactions with the TIND server.'''
     pass
 
-class TopiError(TopiException):
+class DataMismatchError(TopiException):
     '''Unrecoverable problem involving Topi.'''
     pass
 

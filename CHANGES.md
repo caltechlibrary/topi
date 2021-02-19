@@ -1,6 +1,14 @@
 Change log for Topi
 ===================
 
+Version 1.0.0
+-------------
+
+* Removed build files accidentally committed during last release.
+* Added more info to the [`README` file](README.md).
+* Some internal code improvements.
+
+
 Version 0.0.2
 -------------
 

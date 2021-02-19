@@ -21,7 +21,7 @@ if __debug__:
     from sidetrack import log
 
 from .tind_utils import result_from_api
-from .exceptions import TopiError
+from .exceptions import DataMismatchError
 
 
 # Constants.
@@ -89,15 +89,9 @@ class TindRecord():
         field_values = []
         for field in self.__fields.keys():
             value = getattr(self, field, None)
-            if value:
-                if isinstance(value, list):
-                    field_values.append(f'{field}={value}')
-                else:
-                    field_values.append(f'{field}="{value}"')
-        if field_values:
-            return 'TindRecord(' + ', '.join(field_values) + ')'
-        else:
-            return 'TindRecord()'
+            printed_value = value if isinstance(value, list) else f'"{value}"'
+            field_values.append(f'{field}={printed_value}')
+        return 'TindRecord(' + ', '.join(field_values) + ')'
 
 
     def __eq__(self, other):
@@ -148,14 +142,17 @@ class TindRecord():
             except JSONDecodeError as ex:
                 raise TindError(f'Malformed result from {self._server_url}: str(ex)')
             except TypeError as ex:
-                raise TopiError('Error getting thumbnail -- please report this.')
-            if data:
-                if 'big' in data:
-                    if __debug__: log(f'thumbnail for {self.tind_id} is {data["big"]}')
-                    return data['big']
-                elif 'small' in data:
-                    if __debug__: log(f'thumbnail for {self.tind_id} is {data["small"]}')
-                    return data['small']
+                raise DataMismatchError(f'Unexpected data returned by {self._server_url}.')
+
+            if 'big' in data:
+                if __debug__: log(f'thumbnail for {self.tind_id} is {data["big"]}')
+                return data['big']
+            elif 'medium' in data:
+                if __debug__: log(f'thumbnail for {self.tind_id} is {data["medium"]}')
+                return data['medium']
+            elif 'small' in data:
+                if __debug__: log(f'thumbnail for {self.tind_id} is {data["small"]}')
+                return data['small']
             else:
                 if __debug__: log(f'could not find thumbnail for {self.tind_id}')
                 return ''

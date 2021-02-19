@@ -144,7 +144,7 @@ class Tind():
             for item in record.items:
                 if item.barcode == barcode:
                     return item
-            raise TopiError('TindRecord-TindItem mismatch -- please report this.')
+            raise DataMismatchError('Unable to match item to record from TIND.')
         else:
             raise NotFound(f'No record found for {barcode} in {self.server_url}')
 
@@ -265,7 +265,7 @@ class Tind():
             except JSONDecodeError as ex:
                 raise TindError(f'Malformed result from {self.server_url}: str(ex)')
             except TypeError as ex:
-                raise TopiError('Error during item lookup -- please report this.')
+                raise DataMismatchError(f'Unexpected data returned by {self.server_url}.')
 
             if 'items' not in data:
                 if __debug__: log(f'results from server missing "items" key')

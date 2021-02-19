@@ -16,6 +16,7 @@ Table of contents
 * [Introduction](#introduction)
 * [Installation](#installation)
 * [Usage](#usage)
+* [Known issues and limitations](#known-issues-and-limitations)
 * [Getting help](#getting-help)
 * [Contributing](#contributing)
 * [License](#license)
@@ -95,7 +96,7 @@ tind = Tind('https://caltech.tind.io')
 rec  = tind.record(tind_id = 680311)
 ```
 
-Note the use of the keyword argument.  To create a record from an existing MARC XML file obtained from a TIND server some other way, 
+Note the use of the keyword argument.  Below is an example of how to create a record from an existing MARC XML file obtained from a TIND server some other way &ndash; let's assume it is stored a file named `downloaded-marc.xml`:
 
 ```python
 from topi import Tind
@@ -126,13 +127,13 @@ Conceptually, in TIND an "item" is a specific copy of a work; this copy has a ba
 | `location`    | string       | The location of the item in the library             |
 | `status`      | string       | Status of the item listed in TIND                   |
 
-A `TindItem` object can be obtained using the factory method `item(...)` on the `Tind` interface object.  This method takes a single argument: a barcode.  Here is an example:
+With Topi, a `TindItem` object can be obtained using the factory method `item(...)` on the `Tind` interface object.  This method takes a single argument: a barcode.  Here is an example:
 
 ```python
 from topi import Tind
 
 tind = Tind('https://caltech.tind.io')
-rec  = tind.item(35047018228114)
+item = tind.item(35047018228114)
 ```
 
 Item records have parent pointers to the corresponding bibliographic record, in the form of a `TindRecord`.  Thus, given an item object, it's possible to look up the rest of the bibliographic record simply by dereferencing the `.parent` field:
@@ -150,7 +151,13 @@ Calling the `item` method on `Tind` will return an empty `TindItem` object.
 
 ### Additional notes
 
-Topi fills out the `thumbnail_url` field of a `TindRecord` object by using TIND's API for the purpose.  This only retrieves what a given TIND database contains for the cover image of a work, and in particular, other sources such as the [Open Library Covers API](https://openlibrary.org/dev/docs/api/covers) may have covers that a TIND database lacks.
+Topi fills out the `thumbnail_url` field of a `TindRecord` object by using TIND's API for the purpose.  This only retrieves what a given TIND database contains for the cover image of a work.  Other sources such as the [Open Library Covers API](https://openlibrary.org/dev/docs/api/covers) may have cover images that a TIND database lacks, but it is outside the scope of Topi to provide an interface for looking outside the TIND database.
+
+
+Known issues and limitations
+------------------------------
+
+Currently, the coverage of the fields in `TindRecord` is limited.  Not all fields of a MARC XML record are mapped to fields in `TindRecord` at this time.  (Code contributions are welcome!)
 
 
 Getting help
@@ -177,6 +184,16 @@ Acknowledgments
 This work was funded by the California Institute of Technology Library.
 
 The [vector artwork](https://thenounproject.com/term/antelope/931009/) of an antelope, used as the icon for this repository, was created by [parkjisun](https://thenounproject.com/naripuru/) for the Noun Project.  It is licensed under the Creative Commons [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/) license.
+
+Topi makes use of numerous open-source packages, without which Topi could not have been developed.  I want to acknowledge this debt.  In alphabetical order, the packages are:
+
+* [commonpy](https://github.com/caltechlibrary/commonpy) &ndash; a collection of commonly-useful Python functions
+* [cssselect](https://pypi.org/project/cssselect/) &ndash; `lxml` add-on to parse CSS3 selectors 
+* [ipdb](https://github.com/gotcha/ipdb) &ndash; the IPython debugger
+* [lxml](https://lxml.de) &ndash; an XML parsing library for Python
+* [setuptools](https://github.com/pypa/setuptools) &ndash; library for `setup.py`
+* [sidetrack](https://github.com/caltechlibrary/sidetrack) &ndash; simple debug logging/tracing package
+
 
 <div align="center">
   <br>
