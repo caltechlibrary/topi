@@ -14,6 +14,7 @@ is open-source software released under a 3-clause BSD license.  Please see the
 file "LICENSE" for more information.
 '''
 
+from   commonpy.interrupt import wait
 from   commonpy.network_utils import net
 from   commonpy.exceptions import NoContent, ServiceFailure, RateLimitExceeded
 
