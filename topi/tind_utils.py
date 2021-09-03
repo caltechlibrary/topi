@@ -14,6 +14,7 @@ is open-source software released under a 3-clause BSD license.  Please see the
 file "LICENSE" for more information.
 '''
 
+from   commonpy.interrupt import wait
 from   commonpy.network_utils import net
 from   commonpy.exceptions import NoContent, ServiceFailure, RateLimitExceeded
 
@@ -51,7 +52,6 @@ def result_from_api(endpoint, result_producer, retry = 0):
         else:
             if __debug__: log(f'hit rate limit; pausing {_RATE_LIMIT_SLEEP}s')
             wait(_RATE_LIMIT_SLEEP)
-            return result_from_tind(endpoint, result_producer, retry = retry)
+            return result_from_api(endpoint, result_producer, retry = retry)
     else:
-        if __debug__: log(f'got {type(error)} error for {endpoint}')
         raise TindError(f'Problem contacting {endpoint}: {str(error)}')

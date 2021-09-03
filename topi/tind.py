@@ -21,7 +21,6 @@ file "LICENSE" for more information.
 '''
 
 from   collections import namedtuple
-from   commonpy.interrupt import wait
 from   commonpy.network_utils import net
 from   commonpy.exceptions import NoContent, ServiceFailure, RateLimitExceeded
 import json
@@ -257,7 +256,6 @@ class Tind():
         def response_handler(resp):
             results = []
             if not resp or not resp.text:
-                if __debug__: log(f'got empty json for items for {endpoint}')
                 return []
             try:
                 data = json.loads(resp.text)
