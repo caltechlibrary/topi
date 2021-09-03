@@ -48,6 +48,7 @@ class TindRecord():
         'subtitle'      : str,          # MARC data field 245
         'author'        : str,          # MARC data field 245 or 100
         'edition'       : str,          # MARC data field 250
+        'publisher'     : str,          # MARC data field 260
         'year'          : str,          # extracted from control field 008
         'isbn_issn'     : list,         # MARC data field 020
         'description'   : str,          # MARC data field 300 concatenated

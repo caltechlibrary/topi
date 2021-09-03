@@ -223,6 +223,10 @@ class Tind():
                 for subfield in element.findall(ELEM_SUBFIELD):
                     if subfield.attrib['code'] == 'a':
                         record.note = subfield.text.strip()
+            elif element.attrib['tag'] == '260':
+                for subfield in element.findall(ELEM_SUBFIELD):
+                    if subfield.attrib['code'] == 'b':
+                        record.publisher = subfield.text.strip()
 
         # We get author from 245 because in our entries, it's frequently part
         # of the title statement. If it's not, but we got an author from 100
@@ -248,6 +252,7 @@ class Tind():
         record.edition     = cleaned(record.edition)
         record.subtitle    = cleaned(record.subtitle)
         record.description = cleaned(record.description)
+        record.publisher   = cleaned(record.publisher)
 
         return record
 
@@ -290,7 +295,7 @@ def cleaned(text):
     '''Mildly clean up the given text string.'''
     if not text:
         return text
-    text = text.rstrip('./')
+    text = text.rstrip('./,')
     return text.strip()
 
 
