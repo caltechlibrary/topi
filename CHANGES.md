@@ -1,5 +1,11 @@
 # Change log for Topi
 
+## Version 1.0.3
+
+* Fix serious bugs in `tind.py`.
+* Update test cases to account for changes in entries in Caltech's TIND catalog.
+
+
 ## Version 1.0.2
 
 * Fix bugs in `tind_utils.py`.
