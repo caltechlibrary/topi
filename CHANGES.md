@@ -1,7 +1,8 @@
 # Change log for Topi
 
-## Version 1.0.3
+## Version 1.1.0
 
+* Add `publisher` field to TIND record object.
 * Fix serious bugs in `tind.py`.
 * Update test cases to account for changes in entries in Caltech's TIND catalog.
 
