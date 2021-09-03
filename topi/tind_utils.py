@@ -52,6 +52,6 @@ def result_from_api(endpoint, result_producer, retry = 0):
         else:
             if __debug__: log(f'hit rate limit; pausing {_RATE_LIMIT_SLEEP}s')
             wait(_RATE_LIMIT_SLEEP)
-            return result_from_tind(endpoint, result_producer, retry = retry)
+            return result_from_api(endpoint, result_producer, retry = retry)
     else:
         raise TindError(f'Problem contacting {endpoint}: {str(error)}')
