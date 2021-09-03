@@ -188,6 +188,7 @@ class Tind():
                 if not record.year.isdigit():
                     record.year = ''
 
+        main_author = None
         for element in elements.findall(ELEM_DATAFIELD):
             if element.attrib['tag'] == '250':
                 record.edition = element.find(ELEM_SUBFIELD).text.strip()
@@ -198,7 +199,7 @@ class Tind():
             elif element.attrib['tag'] == '100':
                 for subfield in element.findall(ELEM_SUBFIELD):
                     if subfield.attrib['code'] == 'a':
-                        record.main_author = subfield.text.strip()
+                        main_author = subfield.text.strip()
             elif element.attrib['tag'] == '245':
                 for subfield in element.findall(ELEM_SUBFIELD):
                     if subfield.attrib['code'] == 'a':
@@ -231,14 +232,14 @@ class Tind():
                 record.author = record.author[2:].strip()
             elif record.author.startswith('edited by'):
                 record.author = record.author[10:].strip()
-        elif record.main_author:
-            record.author = record.main_author
+        elif main_author:
+            record.author = main_author
 
         # Caltech's TIND database contains some things that are not reading
         # materials per se. The following is an attempt to weed those out.
         if sum([not record.author, not record.year, not record.title]) > 1:
             for field in ['title', 'author', 'year', 'call_no', 'edition']:
-                setattr(record. field, None)
+                setattr(record, field, None)
             return record
 
         # Some cleanup work is better left until after we obtain all values.
