@@ -3,6 +3,7 @@
 ## Version 1.0.2
 
 * Fix bugs in `tind_utils.py`.
+* Update required version of [Sidetrack](https://github.com/caltechlibrary/sidetrack) to 2.0.
 
 
 ## Version 1.0.1
