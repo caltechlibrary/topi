@@ -5,7 +5,7 @@ Topi (_"**T**IND **O**bject **P**ython **I**nterface"_) is a Python package for 
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg?style=flat-square)](https://choosealicense.com/licenses/bsd-3-clause)
 [![Latest release](https://img.shields.io/github/v/release/caltechlibrary/topi.svg?style=flat-square&color=b44e88)](https://github.com/caltechlibrary/topi/releases)
-[![DOI](https://img.shields.io/badge/dynamic/json.svg?label=DOI&style=flat-square&colorA=gray&colorB=navy&query=$.metadata.doi&uri=https://data.caltech.edu/api/record/2104)](https://data.caltech.edu/records/2104)
+[![DOI](https://img.shields.io/badge/dynamic/json.svg?label=DOI&style=flat-square&colorA=gray&colorB=navy&query=$.metadata.doi&uri=https://data.caltech.edu/api/record/2105)](https://data.caltech.edu/records/2105)
 [![Python](https://img.shields.io/badge/Python-3.6+-brightgreen.svg?style=flat-square)](http://shields.io)
 [![PyPI](https://img.shields.io/pypi/v/topi.svg?style=flat-square&color=orange)](https://pypi.org/project/topi/)
 
@@ -80,6 +80,7 @@ This object class represents a bibliographic record in a TIND database.  The fie
 | `subtitle`      | string | The subtitle (derived from MARC data field 245)         |
 | `author`        | string | The author(s) (derived from MARC data field 245 or 100) |
 | `edition`       | string | The edition (derived from MARC data field 250)          |
+| `publisher`     | string | The publisher's name (extracted from MARC control field 260) |
 | `year`          | string | The year (extracted from MARC control field 008)        |
 | `isbn_issn`     | list   | ISBN or ISSN numbers (from MARC data field 020)         |
 | `description`   | string | A description, concatenated from MARC data field 300    |
