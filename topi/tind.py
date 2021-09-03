@@ -257,7 +257,6 @@ class Tind():
         def response_handler(resp):
             results = []
             if not resp or not resp.text:
-                if __debug__: log(f'got empty json for items for {endpoint}')
                 return []
             try:
                 data = json.loads(resp.text)
