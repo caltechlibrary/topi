@@ -241,6 +241,7 @@ def test_tind_id6():
     assert r.title      == 'Feedback control theory'
     assert r.author     == 'John C. Doyle, Bruce A. Francis, Allen R. Tannenbaum'
     assert r.year       == '1992'
+    assert r.publisher  == 'Maxwell Macmillan International'
     assert r.isbn_issn  == ['0023300116']
     assert len(r.items) == 2
     assert r.items[0].parent      == r
@@ -281,7 +282,7 @@ def test_repr2():
                        'description="c.1", library="Millikan Library", '
                        'location="Millikan 9 leisure collection", '
                        'parent="TindRecord 676897", status="on shelf", '
-                       'type="Book", volume="None")], subtitle="", '
+                       'type="Book", volume="None")], publisher="Bantam Books", subtitle="", '
                        'thumbnail_url="https://bookcover.tind.io//bookcover/thumbnails/0553380966_large", '
                        'tind_id="676897", tind_url="https://caltech.tind.io/record/676897", '
                        'title="The diamond age", year="2003")')
