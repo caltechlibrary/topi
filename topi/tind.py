@@ -21,7 +21,6 @@ file "LICENSE" for more information.
 '''
 
 from   collections import namedtuple
-from   commonpy.interrupt import wait
 from   commonpy.network_utils import net
 from   commonpy.exceptions import NoContent, ServiceFailure, RateLimitExceeded
 import json
