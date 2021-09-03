@@ -142,7 +142,6 @@ def test_xml():
     barcodes = [item.barcode for item in r.items]
     assert "35047018228114" in barcodes
     assert "35047019492099" in barcodes
-    assert "35047019292101" in barcodes
 
 
 def test_item1():
@@ -234,23 +233,6 @@ def test_tind_id4():
     assert r.edition == 'Bantam trade pbk. reissue'
 
 
-def test_tind_id5():
-    tind = Tind('https://caltech.tind.io')
-    r = tind.record(tind_id = 705063)
-    assert r.tind_id    == '705063'
-    assert r.tind_url   == 'https://caltech.tind.io/record/705063'
-    assert r.title      == 'Python essential reference'
-    assert r.author     == 'David M. Beazley'
-    assert r.edition    == '4th ed'
-    assert r.year       == '2009'
-    assert r.isbn_issn  == ['0672329786', '9780672329784']
-    assert len(r.items) == 1
-    assert r.items[0].parent      == r
-    assert r.items[0].barcode     == '35047018886929'
-    assert r.items[0].type        == 'Book'
-    assert r.items[0].call_number == 'QA76.73.P98 B43 2009'
-
-
 def test_tind_id6():
     tind = Tind('https://caltech.tind.io')
     r = tind.record(tind_id = 574858)
@@ -280,8 +262,8 @@ def test_repr1():
     assert str(item) == 'TindItem 35047019626837'
     assert repr(item) == ('TindItem(barcode="35047019626837", '
                           'call_number="QC806.L67 2020", '
-                          'description="c.1", library="Sherman Fairchild Library", '
-                          'location="SFL1 Closed Reserve (24-hr)", '
+                          'description="c.1", library="Geology Library", '
+                          'location="Geology", '
                           'parent="TindRecord 990468", status="on shelf", '
                           'type="Book", volume="")')
 
